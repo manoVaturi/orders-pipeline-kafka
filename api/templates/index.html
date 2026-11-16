@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{% block title %}ManoShop{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='style.css') }}"
+    />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a id="logo" href="/">ManoShop</a>
+        <label class="user-box">
+          <span>Shopping as</span>
+          <input id="uid" value="u1" placeholder="user id" autocomplete="off" />
+        </label>
+      </div>
+    </header>
+
+    <main class="container">
+      <section class="hero">
+        <h1>Our products</h1>
+        <p>
+          {{ products | length }} item{{ "" if products | length == 1 else "s"
+          }} available
+        </p>
+      </section>
+
+      <div class="shop-layout">
+        <div class="card-grid">
+          {% for product in products %}
+          <article class="card">
+            <div class="card-body">
+              <span class="card-sku">{{ product.sku }}</span>
+              <h2 class="card-title">{{ product.name }}</h2>
+              <p class="card-price">${{ "%.2f" | format(product.price) }}</p>
+              <button
+                class="btn btn-block"
+                data-product="{{ product.id }}"
+                data-name="{{ product.name }}"
+              >
+                Buy
+              </button>
+            </div>
+          </article>
+          {% else %}
+          <p class="empty">
+            No products yet. Run <code>make seed</code> to add some.
+          </p>
+          {% endfor %}
+        </div>
+
+        <aside class="panel" aria-live="polite">
+          <div class="panel-head">
+            <h2>My purchases</h2>
+            <button id="refresh" class="btn btn-ghost btn-small">
+              Refresh
+            </button>
+          </div>
+          <div id="purchases" class="orders"></div>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">ManoShop</div>
+    </footer>
+
+    <div id="toast" class="toast" role="status"></div>
+
+    <script>
+      const $ = (id) => document.getElementById(id);
+      const uidInput = $("uid");
+      let timer = null;
+
+      try {
+        uidInput.value = localStorage.getItem("uid") || uidInput.value;
+      } catch (e) {}
+
+      const uid = () => uidInput.value.trim();
+
+      const esc = (s) =>
+        String(s).replace(
+          /[&<>"']/g,
+          (c) =>
+            ({
+              "&": "&amp;",
+              "<": "&lt;",
+              ">": "&gt;",
+              '"': "&quot;",
+              "'": "&#39;",
+            })[c],
+        );
+
+      function toast(message, isError) {
+        const t = $("toast");
+        t.textContent = message;
+        t.className = "toast show" + (isError ? " error" : "");
+        clearTimeout(t.hideTimer);
+        t.hideTimer = setTimeout(() => (t.className = "toast"), 2500);
+      }
+
+      async function buy(button) {
+        if (!uid()) return toast("Enter a user id first", true);
+        button.disabled = true;
+        try {
+          const r = await fetch("/checkout", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              user_id: uid(),
+              items: [{ product_id: button.dataset.product, quantity: 1 }],
+            }),
+          });
+          if (!r.ok) throw new Error("Order failed (" + r.status + ")");
+          toast("Ordered " + button.dataset.name);
+          loadPurchases();
+        } catch (e) {
+          toast(e.message, true);
+        } finally {
+          button.disabled = false;
+        }
+      }
+
+      async function loadPurchases() {
+        clearTimeout(timer);
+        if (!uid()) {
+          $("purchases").innerHTML =
+            '<p class="muted">Enter a user id to see purchases.</p>';
+          return;
+        }
+        try {
+          localStorage.setItem("uid", uid());
+        } catch (e) {}
+
+        const r = await fetch(
+          "/api/getAllBoughtItems?user_id=" + encodeURIComponent(uid()),
+        );
+        const data = await r.json();
+
+        $("purchases").innerHTML = data.orders.length
+          ? data.orders
+              .map(
+                (o) => `
+          <div class="order">
+            <div class="order-top">
+              <span class="muted">#${esc(o.order_id.slice(0, 8))}</span>
+              <span class="pill ${esc(o.status)}">${esc(o.status)}</span>
+            </div>
+            ${o.items
+              .map(
+                (i) =>
+                  `<div class="order-line"><span>${esc(i.product_name)} &times; ${esc(i.quantity)}</span><span>$${(i.price_at_purchase * i.quantity).toFixed(2)}</span></div>`,
+              )
+              .join("")}
+            <div class="order-total"><span>Total</span><span>$${o.total_amount.toFixed(2)}</span></div>
+          </div>`,
+              )
+              .join("")
+          : '<p class="muted">Nothing bought yet.</p>';
+
+        // Keep refreshing while the worker is still processing orders
+        if (data.orders.some((o) => o.status === "pending")) {
+          timer = setTimeout(loadPurchases, 2000);
+        }
+      }
+
+      document.querySelectorAll("[data-product]").forEach((b) =>
+        b.addEventListener("click", () => buy(b)),
+      );
+      $("refresh").addEventListener("click", loadPurchases);
+      uidInput.addEventListener("change", loadPurchases);
+      loadPurchases();
+    </script>
+  </body>
+</html>

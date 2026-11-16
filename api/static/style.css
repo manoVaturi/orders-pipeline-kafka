@@ -1,0 +1,574 @@
+/* ---- tokens ---------------------------------------------------------- */
+
+:root {
+   --bg: #f5f6f8;
+   --surface: #fff;
+   --ink: #1f2430;
+   --muted: #667085;
+   --line: #e3e6eb;
+   --brand: #2563eb;
+   --brand-dark: #1d4ed8;
+   --danger: #c62828;
+   --header: #1f2430;
+   --radius: 10px;
+}
+
+
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
+
+body {
+   min-height: 100vh;
+   display: flex;
+   flex-direction: column;
+   font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+   line-height: 1.5;
+   color: var(--ink);
+   background: var(--bg);
+}
+
+main {
+   flex: 1;
+   padding-top: 1.5rem;
+   padding-bottom: 3rem;
+}
+
+a {
+   color: var(--brand);
+}
+
+code {
+   padding: 0.1em 0.4em;
+   border-radius: 4px;
+   background: #e9ecf1;
+   font-size: 0.9em;
+}
+
+.container {
+   width: 100%;
+   max-width: 1100px;
+   margin: 0 auto;
+   padding-inline: 1.25rem; /* sides only, so vertical padding still works */
+}
+
+.sr-only {
+   position: absolute;
+   width: 1px;
+   height: 1px;
+   overflow: hidden;
+   clip: rect(0 0 0 0);
+   white-space: nowrap;
+}
+
+.muted {
+   display: block;
+   color: var(--muted);
+   font-size: 0.85rem;
+}
+
+/* ---- header / nav ---------------------------------------------------- */
+
+.site-header {
+   background: var(--header);
+   color: #fff;
+}
+
+.header-inner {
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   justify-content: space-between;
+   gap: 0.5rem 1rem;
+   padding-top: 0.6rem;
+   padding-bottom: 0.6rem;
+}
+
+#logo {
+   color: #fff;
+   font-size: 1.5rem;
+   font-weight: 700;
+   text-decoration: none;
+}
+
+.nav-links {
+   display: flex;
+   flex-wrap: wrap;
+   align-items: center;
+   gap: 0.25rem;
+   list-style: none;
+}
+
+.nav-links a,
+.nav-btn {
+   display: inline-block;
+   padding: 0.5rem 0.9rem;
+   border: 0;
+   border-radius: 6px;
+   background: none;
+   color: #fff;
+   font: inherit;
+   text-decoration: none;
+   cursor: pointer;
+   transition: background-color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-btn:hover,
+.nav-links a.active {
+   background: #3a4152;
+}
+
+.nav-user {
+   padding: 0 0.5rem;
+   color: #aab1c0;
+}
+
+.badge {
+   display: inline-block;
+   min-width: 1.4rem;
+   margin-left: 0.4rem;
+   padding: 0 0.4rem;
+   border-radius: 999px;
+   background: var(--brand);
+   color: #fff;
+   font-size: 0.8rem;
+   font-weight: 700;
+   text-align: center;
+}
+
+/* ---- alerts ---------------------------------------------------------- */
+
+.alert {
+   margin-bottom: 1rem;
+   padding: 0.75rem 1rem;
+   border: 1px solid;
+   border-radius: var(--radius);
+}
+
+.alert-success {
+   background: #e8f5e9;
+   border-color: #a5d6a7;
+   color: #1b5e20;
+}
+
+.alert-error {
+   background: #fdecea;
+   border-color: #f5a9a4;
+   color: #8e1b1b;
+}
+
+/* ---- buttons --------------------------------------------------------- */
+
+.btn {
+   display: inline-block;
+   padding: 0.55rem 1.1rem;
+   border: 1px solid var(--brand);
+   border-radius: 8px;
+   background: var(--brand);
+   color: #fff;
+   font: inherit;
+   font-weight: 600;
+   text-decoration: none;
+   cursor: pointer;
+   transition: background-color 0.2s;
+}
+
+.btn:hover {
+   background: var(--brand-dark);
+}
+
+.btn-block {
+   width: 100%;
+   margin-top: 1.25rem;
+}
+
+.btn-small {
+   padding: 0.3rem 0.7rem;
+   font-size: 0.85rem;
+}
+
+.btn-ghost {
+   background: transparent;
+   color: var(--brand);
+}
+
+.btn-ghost:hover {
+   background: #e8efff;
+}
+
+.btn-danger {
+   border-color: var(--danger);
+   background: transparent;
+   color: var(--danger);
+}
+
+.btn-danger:hover {
+   background: #fdecea;
+}
+
+/* ---- products -------------------------------------------------------- */
+
+.hero {
+   padding: 2.5rem 0 1.5rem;
+   text-align: center;
+}
+
+.hero p {
+   color: var(--muted);
+}
+
+.card-grid {
+   display: grid;
+   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+   gap: 1.25rem;
+}
+
+.card {
+   display: flex;
+   flex-direction: column;
+   border: 1px solid var(--line);
+   border-radius: var(--radius);
+   background: var(--surface);
+   box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06);
+}
+
+.card-body {
+   display: flex;
+   flex: 1;
+   flex-direction: column;
+   padding: 1.1rem;
+}
+
+.card-sku {
+   color: var(--muted);
+   font-size: 0.8rem;
+   letter-spacing: 0.04em;
+}
+
+.card-title {
+   margin: 0.15rem 0 0.4rem;
+   font-size: 1.15rem;
+}
+
+.card-price {
+   flex: 1;
+   font-size: 1.25rem;
+   font-weight: 700;
+}
+
+.card-form {
+   display: flex;
+   gap: 0.5rem;
+   margin-top: 1rem;
+}
+
+.qty {
+   width: 4.2rem;
+}
+
+.card-form .btn {
+   flex: 1;
+}
+
+.empty {
+   grid-column: 1 / -1;
+   padding: 2rem;
+   text-align: center;
+   color: var(--muted);
+}
+
+/* ---- forms ----------------------------------------------------------- */
+
+input {
+   width: 100%;
+   padding: 0.55rem 0.7rem;
+   border: 1px solid #c9cfd8;
+   border-radius: 8px;
+   background: #fff;
+   font: inherit;
+}
+
+input:focus-visible,
+.btn:focus-visible,
+.nav-btn:focus-visible,
+.nav-links a:focus-visible {
+   outline: 3px solid #93b4ff;
+   outline-offset: 1px;
+}
+
+.form-card {
+   max-width: 400px;
+   margin: 2rem auto;
+   padding: 1.75rem;
+   border: 1px solid var(--line);
+   border-radius: var(--radius);
+   background: var(--surface);
+   box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06);
+}
+
+.form-card h1 {
+   margin-bottom: 1rem;
+   font-size: 1.5rem;
+}
+
+.form-card label {
+   display: block;
+   margin-top: 1rem;
+   font-weight: 600;
+}
+
+.form-card input {
+   margin-top: 0.3rem;
+}
+
+.form-card small {
+   color: var(--muted);
+}
+
+.form-note {
+   margin-top: 1.25rem;
+   text-align: center;
+   color: var(--muted);
+}
+
+/* ---- cart ------------------------------------------------------------ */
+
+.page-title {
+   margin-bottom: 1rem;
+   font-size: 1.6rem;
+}
+
+.table-wrap {
+   overflow-x: auto;
+   border: 1px solid var(--line);
+   border-radius: var(--radius);
+   background: var(--surface);
+}
+
+.cart-table {
+   width: 100%;
+   border-collapse: collapse;
+}
+
+.cart-table th,
+.cart-table td {
+   padding: 0.8rem 1rem;
+   border-bottom: 1px solid var(--line);
+   text-align: left;
+   vertical-align: middle;
+}
+
+.cart-table th {
+   background: #fafbfc;
+   color: var(--muted);
+   font-size: 0.85rem;
+   text-transform: uppercase;
+   letter-spacing: 0.04em;
+}
+
+.cart-table .num {
+   text-align: right;
+   white-space: nowrap;
+}
+
+.cart-table tfoot td {
+   border-bottom: 0;
+   font-weight: 700;
+}
+
+.cart-table .total {
+   font-size: 1.2rem;
+}
+
+.cart-actions {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: space-between;
+   gap: 0.75rem;
+   margin-top: 1.25rem;
+}
+
+.empty-state {
+   padding: 3rem 1rem;
+   border: 1px dashed #c9cfd8;
+   border-radius: var(--radius);
+   text-align: center;
+   color: var(--muted);
+}
+
+.empty-state .btn {
+   margin-top: 1rem;
+}
+
+/* ---- footer ---------------------------------------------------------- */
+
+.site-footer {
+   padding: 1.25rem 0;
+   border-top: 1px solid var(--line);
+   color: var(--muted);
+   font-size: 0.9rem;
+   text-align: center;
+}
+
+/* ---- shop layout / purchases panel ----------------------------------- */
+
+.user-box {
+   display: flex;
+   align-items: center;
+   gap: 0.6rem;
+   color: #aab1c0;
+   font-size: 0.9rem;
+}
+
+.user-box input {
+   width: 9rem;
+   padding: 0.35rem 0.6rem;
+   border-color: #3a4152;
+   background: #2a3040;
+   color: #fff;
+}
+
+.shop-layout {
+   display: grid;
+   grid-template-columns: 1fr 320px;
+   gap: 1.5rem;
+   align-items: start;
+}
+
+.shop-layout .card-grid {
+   grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+}
+
+.card {
+   transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.card:hover {
+   transform: translateY(-2px);
+   box-shadow: 0 6px 16px rgba(16, 24, 40, 0.1);
+}
+
+.card .btn-block {
+   margin-top: 0.9rem;
+}
+
+.btn:disabled {
+   opacity: 0.6;
+   cursor: wait;
+}
+
+.panel {
+   position: sticky;
+   top: 1rem;
+   max-height: calc(100vh - 2rem);
+   overflow-y: auto;
+   padding: 1.1rem;
+   border: 1px solid var(--line);
+   border-radius: var(--radius);
+   background: var(--surface);
+   box-shadow: 0 1px 3px rgba(16, 24, 40, 0.06);
+}
+
+.panel-head {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   margin-bottom: 0.75rem;
+}
+
+.panel-head h2 {
+   font-size: 1.15rem;
+}
+
+.order {
+   margin-bottom: 0.75rem;
+   padding: 0.75rem;
+   border: 1px solid var(--line);
+   border-radius: 8px;
+   background: #fafbfc;
+}
+
+.order-top,
+.order-line,
+.order-total {
+   display: flex;
+   justify-content: space-between;
+   gap: 0.5rem;
+}
+
+.order-top {
+   margin-bottom: 0.4rem;
+}
+
+.order-line {
+   font-size: 0.92rem;
+}
+
+.order-total {
+   margin-top: 0.4rem;
+   padding-top: 0.4rem;
+   border-top: 1px dashed var(--line);
+   font-weight: 700;
+}
+
+.pill {
+   padding: 0.05rem 0.6rem;
+   border-radius: 999px;
+   font-size: 0.78rem;
+   font-weight: 700;
+   text-transform: capitalize;
+}
+
+.pill.pending {
+   background: #fff4d6;
+   color: #8a5a00;
+}
+
+.pill.completed {
+   background: #e8f5e9;
+   color: #1b5e20;
+}
+
+.pill.failed {
+   background: #fdecea;
+   color: #8e1b1b;
+}
+
+/* ---- toast ------------------------------------------------------------ */
+
+.toast {
+   position: fixed;
+   right: 1.25rem;
+   bottom: 1.25rem;
+   padding: 0.7rem 1.1rem;
+   border-radius: 8px;
+   background: var(--header);
+   color: #fff;
+   opacity: 0;
+   transform: translateY(10px);
+   pointer-events: none;
+   transition: opacity 0.2s, transform 0.2s;
+}
+
+.toast.show {
+   opacity: 1;
+   transform: none;
+}
+
+.toast.error {
+   background: var(--danger);
+}
+
+@media (max-width: 800px) {
+   .shop-layout {
+      grid-template-columns: 1fr;
+   }
+
+   .panel {
+      position: static;
+      max-height: none;
+   }
+}
